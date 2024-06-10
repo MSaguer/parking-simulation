@@ -165,6 +165,7 @@ def generateur (dim, n, places) : #générateur de n voitures distinctes
 
 
 def testing_parking(dim, places, nom, ymax, nb_essais) :
+    plt.figure()
     nb_tours = []
     nb_voitures = []
     t1 = time.time()
@@ -252,16 +253,16 @@ print("")
 largeur, longueur = 6,6
 dim = [largeur, longueur]
 ymax6 = 20
-#fourchette(dim, ymax6, nb_essais)
-#fourchetteinv(dim, ymax6, nb_essais)
-#ilots(dim, ymax6, nb_essais)
-#pilots(dim, ymax6, nb_essais)
+fourchette(dim, ymax6, nb_essais)
+fourchetteinv(dim, ymax6, nb_essais)
+ilots(dim, ymax6, nb_essais)
+pilots(dim, ymax6, nb_essais)
 vide(dim, ymax6, nb_essais)
 #
-#largeur, longueur = 12, 12
-#dim = [largeur, longueur]
-#ymax12 = 100
-#fourchette(dim, ymax12, nb_essais)
+largeur, longueur = 12, 12
+dim = [largeur, longueur]
+ymax12 = 100
+fourchette(dim, ymax12, nb_essais)
 #fourchetteinv(dim, ymax12, nb_essais)
 #ilots(dim, ymax12, nb_essais)
 #pilots(dim, ymax12, nb_essais)
