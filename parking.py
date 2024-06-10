@@ -89,7 +89,7 @@ def pathfinding (voiture, sortie, plateau, turvoi): #algo de Bellman Ford
 
 
 
-def AUTOMATE (dimension, voitures, places) :
+def AUTOMATE (dimension, voitures, places, sorties) :
 
     plateau  = [] #ensemble du plateau cad là où ça se passe.
     for i in range (dimension[0]) :
@@ -100,8 +100,6 @@ def AUTOMATE (dimension, voitures, places) :
 
     places_occupées = copy.deepcopy(places) #ensemble des places occupées
     #ici toutes les places sont considérrées occupées à l'état initial
-
-    sorties = [[0, int(dimension[0]/2)], [dimension[1]-1, int(dimension[0]/2)-1]] #endroit vers lequel les voitures se dirigent
 
 
     running = True
@@ -164,7 +162,7 @@ def generateur (dim, n, places) : #générateur de n voitures distinctes
 
 
 
-def testing_parking(dim, places, nom, ymax, nb_essais) :
+def testing_parking(dim, places, nom, ymax, nb_essais, sorties) :
     plt.figure()
     nb_tours = []
     nb_voitures = []
@@ -177,7 +175,7 @@ def testing_parking(dim, places, nom, ymax, nb_essais) :
         tour_ = 0 # nb moyen de tour
         for j in range (nb_essais) :
             voitures = generateur(dim, i, places) # on génère aléatoirement les voitures
-            tour_ += AUTOMATE (dim, voitures, places)
+            tour_ += AUTOMATE (dim, voitures, places, sorties)
         tour_ = tour_/nb_essais
         nb_tours.append(tour_)
         nb_voitures.append(i/nbplaces)
@@ -190,46 +188,43 @@ def testing_parking(dim, places, nom, ymax, nb_essais) :
     ax.set_xlim([0, 1])
     ax.set_ylim([0, ymax])
     plt.plot(nb_voitures, nb_tours)
-    z = np.polyfit(nb_voitures, nb_tours, 1)
-    p = np.poly1d(z)
-    plt.plot(nb_voitures, [p(i) for i in nb_voitures])
     plt.savefig('img/' + str(dim[0]) + '-' + str(dim[1]) + '/' + nom)
 
-def fourchette (dim, ymax, nb_essais) :
+def fourchette (dim, ymax, nb_essais, sorties) :
     places = []
     for i in range(dim[0]) :
         for j in range (dim[1]) :
             if i%3 == 0 and j not in [dim[1]-1, dim[1]] :
                 places.append([i, j])
-    testing_parking(dim, places, 'fourchette.svg', ymax, nb_essais)
+    testing_parking(dim, places, 'fourchette.svg', ymax, nb_essais, sorties)
 
-def fourchetteinv (dim, ymax, nb_essais) :
+def fourchetteinv (dim, ymax, nb_essais, sorties) :
     places = []
     for i in range(dim[0]) :
         for j in range (dim[1]) :
             if j%3 == 0 and i not in [dim[1]-1, dim[1]] :
                 places.append([i, j])
-    testing_parking(dim, places, 'fourchetteinv.svg', ymax, nb_essais)
+    testing_parking(dim, places, 'fourchetteinv.svg', ymax, nb_essais, sorties)
 
-def ilots (dim, ymax, nb_essais) :
+def ilots (dim, ymax, nb_essais, sorties) :
     places = []
     for i in range(dim[0]) :
         for j in range (dim[1]) :
             if i%10 >= 2 and j%5 >= 2 :
                 places.append([i, j])
-    testing_parking(dim, places, 'ilots.svg', ymax, nb_essais)
+    testing_parking(dim, places, 'ilots.svg', ymax, nb_essais, sorties)
 
-def pilots (dim, ymax, nb_essais) :
+def pilots (dim, ymax, nb_essais, sorties) :
     places = []
     for i in range(dim[0]) : #places en fourchette
         for j in range(dim[1]) :
             if i%4 in [1,2] and j%5 >= 2:
                 places.append([i, j])
-    testing_parking(dim, places, 'pilots.svg', ymax, nb_essais)
+    testing_parking(dim, places, 'pilots.svg', ymax, nb_essais, sorties)
 
-def vide (dim, ymax, nb_essais) :
+def vide (dim, ymax, nb_essais, sorties) :
     places  = []
-    testing_parking(dim, places, 'vide.svg', ymax, nb_essais)
+    testing_parking(dim, places, 'vide.svg', ymax, nb_essais, sorties)
 
 def affichage(places, dim, voitures) :
     plateau  = [] #ensemble du plateau cad là où ça se passe.
@@ -243,29 +238,33 @@ def affichage(places, dim, voitures) :
 ##############################################################
 
 places = [] #ensemble des places vides
-nb_essais = 50
+nb_essais = 20
 
 #voitures = [[5, 1], [3, 5], [5, 7], [8, 5], [9, 5], [3, 1]] #ensemble des voitures définies par leur position
 #voitures = [[9,5]]
+#sorties2 = [[0, int(dimension[0]/2)], [dimension[1]-1, int(dimension[0]/2)-1]] #endroit vers lequel les voitures se dirigent
 
 print("")
 
 largeur, longueur = 6,6
 dim = [largeur, longueur]
 ymax6 = 20
-fourchette(dim, ymax6, nb_essais)
-fourchetteinv(dim, ymax6, nb_essais)
-ilots(dim, ymax6, nb_essais)
-pilots(dim, ymax6, nb_essais)
-vide(dim, ymax6, nb_essais)
-#
+sorties = [[0, int(dim[0]/2)]] #endroit vers lequel les voitures se dirigent
+fourchette(dim, ymax6, nb_essais, sorties)
+fourchetteinv(dim, ymax6, nb_essais, sorties)
+ilots(dim, ymax6, nb_essais, sorties)
+pilots(dim, ymax6, nb_essais, sorties)
+ymax6 = 50
+vide(dim, ymax6, nb_essais, sorties)
+
 largeur, longueur = 12, 12
 dim = [largeur, longueur]
-ymax12 = 100
-fourchette(dim, ymax12, nb_essais)
-#fourchetteinv(dim, ymax12, nb_essais)
-#ilots(dim, ymax12, nb_essais)
-#pilots(dim, ymax12, nb_essais)
-#vide(dim, ymax12, nb_essais)
+ymax12 = 120
+sorties = [[0, int(dim[0]/2)]] #endroit vers lequel les voitures se dirigent
+#fourchette(dim, ymax12, nb_essais, sorties)
+fourchetteinv(dim, ymax12, nb_essais, sorties)
+ilots(dim, ymax12, nb_essais, sorties)
+pilots(dim, ymax12, nb_essais, sorties)
+vide(dim, ymax12, nb_essais, sorties)
 
-#AUTOMATE(dim, voitures, places)
+#AUTOMATE(dim, voitures, places, sorties)
